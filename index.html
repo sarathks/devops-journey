@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevOps Learning Journey</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #0ea5e9;
+      --accent-soft: #e0f2fe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --muted: #94a3b8;
+      --text: #1e293b;
+      --text-soft: #475569;
+      --code-bg: #f1f5f9;
+      --code-color: #0284c7;
+      --font: 'Inter', system-ui, sans-serif;
+      --mono: 'Fira Code', 'Courier New', monospace;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #38bdf8;
+      --accent-soft: #0c2a3a;
+      --green: #22c55e;
+      --green-soft: #14532d;
+      --muted: #6b7280;
+      --text: #e2e8f0;
+      --text-soft: #94a3b8;
+      --code-bg: #12141e;
+      --code-color: #7dd3fc;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.7;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 0 1.5rem;
+      text-align: center;
+      background: var(--surface);
+      position: relative;
+    }
+
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
+    header h1 span { color: var(--accent); }
+    header p { color: var(--text-soft); margin-top: 0.4rem; font-size: 0.95rem; }
+
+    .theme-toggle {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.5rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s, border 0.2s;
+    }
+
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    .big-picture {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .big-picture h2 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flow-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+    .flow-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .flow-box h3 { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+    .flow-box pre { font-family: var(--mono); font-size: 0.78rem; color: var(--text-soft); line-height: 1.6; }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid transparent;
+      transition: background 0.15s;
+    }
+
+    .step-header:hover { background: var(--accent-soft); }
+    .step-card.open .step-header { border-bottom-color: var(--border); }
+
+    .step-num {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+      background: var(--accent-soft); color: var(--accent);
+    }
+
+    .step-title { font-weight: 600; font-size: 0.95rem; flex: 1; color: var(--text); }
+
+    .step-chevron { color: var(--muted); font-size: 0.75rem; transition: transform 0.25s; }
+    .step-card.open .step-chevron { transform: rotate(180deg); }
+
+    .step-body { display: none; padding: 1.5rem 2rem 2rem; }
+    .step-card.open .step-body { display: block; }
+
+    .concept { margin-bottom: 1.8rem; padding-bottom: 1.8rem; border-bottom: 1px solid var(--border); }
+    .concept:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .concept h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+    .concept p { color: var(--text-soft); margin-bottom: 0.5rem; }
+    .concept ul, .concept ol { color: var(--text-soft); padding-left: 1.4rem; margin-bottom: 0.5rem; }
+    .concept li { margin-bottom: 0.2rem; }
+
+    code {
+      font-family: var(--mono);
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--code-color);
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+      margin: 0.8rem 0;
+    }
+
+    pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+
+    .compare-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.88rem; }
+    .compare-table th { background: var(--code-bg); color: var(--muted); font-weight: 600; padding: 0.6rem 1rem; text-align: left; border: 1px solid var(--border); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .compare-table td { padding: 0.6rem 1rem; border: 1px solid var(--border); color: var(--text-soft); }
+    .compare-table tr:nth-child(even) td { background: var(--code-bg); }
+
+    .section-label { margin: 2rem 0 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+
+    .glossary-grid { display: grid; gap: 0.5rem; }
+
+    .glossary-item {
+      display: grid; grid-template-columns: 180px 1fr; gap: 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem; align-items: start;
+    }
+
+    .glossary-term { font-family: var(--mono); font-size: 0.82rem; color: var(--accent); font-weight: 600; }
+    .glossary-def { color: var(--text-soft); font-size: 0.88rem; }
+
+    @media (max-width: 640px) {
+      .flow-grid { grid-template-columns: 1fr; }
+      .glossary-item { grid-template-columns: 1fr; gap: 0.3rem; }
+      .step-body { padding: 1.2rem; }
+      .theme-toggle span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>DevOps <span>Learning Journey</span></h1>
+  <p>From zero to understanding and applying core DevOps practices — step by step</p>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 <span>Dark mode</span></button>
+</header>
+
+<div class="container">
+
+  <div class="big-picture">
+    <h2>The Big Picture</h2>
+    <div class="flow-grid">
+      <div class="flow-box">
+        <h3>The loop</h3>
+        <pre>Code
+  ↓ Git
+  ↓ CI Pipeline
+  ↓ CD Pipeline
+  ↓ Infrastructure
+  ↓ Monitoring
+  ↓ Feedback</pre>
+      </div>
+      <div class="flow-box">
+        <h3>Full stack</h3>
+        <pre>App Code
+  ↓ GitHub / GitLab
+  ↓ CI/CD Pipeline
+  ↓ Docker Image
+  ↓ Kubernetes
+  ↓ Cloud (AWS/Azure)
+  ↓ Prometheus + Grafana</pre>
+      </div>
+      <div class="flow-box">
+        <h3>Key principles</h3>
+        <pre>Automate everything
+Fast feedback loops
+Infrastructure as Code
+Shift left on quality
+Monitor & iterate</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step-card open" id="step1">
+    <div class="step-header" onclick="toggle('step1')">
+      <div class="step-num">1</div>
+      <div class="step-title">DevOps Fundamentals</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>What is DevOps?</h3>
+        <p>DevOps is a set of practices that combines software development (Dev) and IT operations (Ops). The goal is to shorten the time between writing code and getting it running in production — reliably, repeatedly, automatically.</p>
+        <p>It's not a tool. It's a culture + process + toolset.</p>
+      </div>
+      <div class="concept">
+        <h3>The problem it solves</h3>
+        <p>Traditional model: Devs write code → hand it to Ops → Ops deploy manually → something breaks → blame game → slow feedback loop.</p>
+        <p>DevOps model: same team owns code from writing to running, everything automated, fast feedback when things break, deploy many times a day safely.</p>
+      </div>
+      <div class="concept">
+        <h3>CI — Continuous Integration</h3>
+        <p>Every time code is pushed, it is automatically built and tested. If something breaks, the team knows immediately — not days later.</p>
+        <p>The goal: always have a codebase that is in a working, testable state.</p>
+      </div>
+      <div class="concept">
+        <h3>CD — Continuous Delivery / Deployment</h3>
+        <p>Continuous Delivery: every passing build is automatically packaged and ready to deploy with one click.</p>
+        <p>Continuous Deployment: every passing build is automatically deployed to production — no human click needed.</p>
+        <p>Most teams use Continuous Delivery and add a manual approval gate before production.</p>
+      </div>
+      <div class="concept">
+        <h3>Pipeline</h3>
+        <p>The automated sequence of steps your code goes through after a push.</p>
+        <pre>push to git
+  ↓ install dependencies
+  ↓ run tests
+  ↓ build artifact / Docker image
+  ↓ push to registry
+  ↓ deploy to staging
+  ↓ (approval gate)
+  ↓ deploy to production</pre>
+      </div>
+      <div class="concept">
+        <h3>Infrastructure as Code (IaC)</h3>
+        <p>Instead of clicking through a cloud console to set up servers, you define your infrastructure in code files. Those files are version-controlled, reviewed, and applied automatically.</p>
+        <p>Tools: Terraform, AWS CDK, Pulumi.</p>
+      </div>
+      <div class="concept">
+        <h3>Shift Left</h3>
+        <p>Moving testing, security checks, and quality gates earlier in the development process. Instead of testing at the end, you test at every commit. Instead of scanning for security issues before release, you scan on every PR.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-card" id="step2">
+    <div class="step-header" onclick="toggle('step2')">
+      <div class="step-num">2</div>
+      <div class="step-title">Linux & The Terminal</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>Why Linux</h3>
+        <p>Most servers, containers, and cloud instances run Linux. Being comfortable at the terminal is a prerequisite for everything else in DevOps.</p>
+      </div>
+      <div class="concept">
+        <h3>File system navigation</h3>
+        <pre>pwd               # where am I
+ls -la            # list files with permissions
+cd /path/to/dir   # change directory
+mkdir my-folder   # create folder
+rm file.txt       # delete file
+rm -rf folder/    # delete folder recursively
+cp src dst        # copy
+mv src dst        # move or rename</pre>
+      </div>
+      <div class="concept">
+        <h3>Reading and editing files</h3>
+        <pre>cat file.txt          # print file contents
+less file.txt         # paginated view
+echo "text" > file    # write to file
+echo "text" >> file   # append to file
+nano file.txt         # simple editor</pre>
+      </div>
+      <div class="concept">
+        <h3>Permissions</h3>
+        <p>Every file has an owner and a permission set: read (r), write (w), execute (x) — for owner, group, and others.</p>
+        <pre>ls -la          # shows permissions like -rwxr-xr-x
+chmod 755 file  # owner=rwx, group=r-x, others=r-x
+chmod +x file   # add execute permission
+chown user file # change file owner</pre>
+      </div>
+      <div class="concept">
+        <h3>Processes</h3>
+        <pre>ps aux        # list all running processes
+top           # live process monitor
+kill &lt;pid&gt;    # terminate a process
+kill -9 &lt;pid&gt; # force kill</pre>
+      </div>
+      <div class="concept">
+        <h3>Networking basics</h3>
+        <pre>ping google.com            # check connectivity
+curl http://localhost:3000  # make an HTTP request
+wget https://example.com/f  # download a file
+ss -tuln                    # list open ports</pre>
+      </div>
+      <div class="concept">
+        <h3>Environment variables</h3>
+        <pre>export MY_VAR="hello"   # set a variable
+echo $MY_VAR            # read it
+env                     # list all env vars</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-card" id="step3">
+    <div class="step-header" onclick="toggle('step3')">
+      <div class="step-num">3</div>
+      <div class="step-title">Git & Branching Workflows</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>Why branching matters in DevOps</h3>
+        <p>A pipeline runs on code in a branch. How you branch directly affects how often you can deploy and how safely.</p>
+      </div>
+      <div class="concept">
+        <h3>Trunk-Based Development</h3>
+        <p>Everyone commits to one main branch (trunk/main) frequently — at least once a day. Feature flags hide incomplete features from users. This enables CI/CD because main is always deployable.</p>
+      </div>
+      <div class="concept">
+        <h3>GitFlow</h3>
+        <p>A heavier branching strategy with dedicated branches: <code>main</code>, <code>develop</code>, <code>feature/*</code>, <code>release/*</code>, <code>hotfix/*</code>. More process overhead, longer-lived branches. Common in teams with scheduled releases.</p>
+      </div>
+      <div class="concept">
+        <h3>Pull Requests / Merge Requests</h3>
+        <p>Before code merges into main, it goes through a PR. The pipeline runs automatically — tests, linting, security scans. Team members review the code. Only then does it merge. This is the quality gate.</p>
+      </div>
+      <div class="concept">
+        <h3>Tagging releases</h3>
+        <pre>git tag v1.0.0                     # create a tag
+git tag v1.0.0 -m "First release"  # annotated tag
+git push origin v1.0.0             # push tag to remote
+git tag                            # list all tags</pre>
+        <p>Tags mark a specific commit as a release. Your pipeline can use tags to trigger production deployments.</p>
+      </div>
+      <div class="concept">
+        <h3>Git hooks</h3>
+        <p>Scripts that run automatically at certain points in the git workflow.</p>
+        <ul>
+          <li><code>pre-commit</code> — run linters/formatters before a commit is saved</li>
+          <li><code>pre-push</code> — run tests before code is pushed</li>
+          <li><code>commit-msg</code> — validate commit message format</li>
+        </ul>
+        <p>Tools like Husky make these easy to configure.</p>
+      </div>
+      <div class="concept">
+        <h3>Conventional Commits</h3>
+        <p>A standardized commit message format that makes changelogs and versioning automatable.</p>
+        <pre>feat: add user authentication
+fix: correct null pointer in payment flow
+docs: update API usage guide
+chore: upgrade dependencies</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-card" id="step4">
+    <div class="step-header" onclick="toggle('step4')">
+      <div class="step-num">4</div>
+      <div class="step-title">Docker & Containers</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>What is a container?</h3>
+        <p>A container packages an application and all its dependencies — runtime, libraries, config — into one isolated unit. It runs the same way on any machine. No more "works on my machine."</p>
+      </div>
+      <div class="concept">
+        <h3>Containers vs Virtual Machines</h3>
+        <table class="compare-table">
+          <thead><tr><th></th><th>Virtual Machine</th><th>Container</th></tr></thead>
+          <tbody>
+            <tr><td>Includes</td><td>Full OS</td><td>Just the app + deps</td></tr>
+            <tr><td>Startup</td><td>Minutes</td><td>Seconds</td></tr>
+            <tr><td>Size</td><td>GBs</td><td>MBs</td></tr>
+            <tr><td>Isolation</td><td>Strong</td><td>Process-level</td></tr>
+          </tbody>
+        </table>
+        <p>Containers share the host OS kernel. VMs each have their own OS. Containers are lighter and faster.</p>
+      </div>
+      <div class="concept">
+        <h3>Image</h3>
+        <p>A read-only blueprint for a container — like a class in code. Contains the filesystem snapshot: OS layer, runtime, app code, config. Built from a <code>Dockerfile</code> and stored in a registry.</p>
+      </div>
+      <div class="concept">
+        <h3>Container</h3>
+        <p>A running instance of an image — like an object from a class. You can run many containers from the same image simultaneously.</p>
+      </div>
+      <div class="concept">
+        <h3>Dockerfile</h3>
+        <p>A text file with instructions to build an image. Each instruction creates a layer.</p>
+        <pre>FROM node:20-alpine          # base image
+WORKDIR /app                 # set working directory
+COPY package*.json ./        # copy dependency files
+RUN npm install              # install dependencies
+COPY . .                     # copy app code
+RUN npm run build            # build
+EXPOSE 3000                  # document the port
+CMD ["node", "server.js"]    # default command to run</pre>
+      </div>
+      <div class="concept">
+        <h3>Multi-stage builds</h3>
+        <p>Build in one stage, copy only the output to a smaller final image. Keeps images lean.</p>
+        <pre># Stage 1: build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Stage 2: serve
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]</pre>
+      </div>
+      <div class="concept">
+        <h3>Docker registry</h3>
+        <p>A storage and distribution system for images.</p>
+        <ul>
+          <li>Docker Hub — public registry, free tier available</li>
+          <li>AWS ECR — private, integrates with AWS</li>
+          <li>GitHub Container Registry (GHCR) — integrates with GitHub</li>
+          <li>Azure Container Registry (ACR) — integrates with Azure</li>
+        </ul>
+        <pre>docker login
+docker push myrepo/my-app:1.0
+docker pull myrepo/my-app:1.0</pre>
+      </div>
+      <div class="concept">
+        <h3>Essential Docker commands</h3>
+        <pre># Images
+docker build -t my-app:1.0 .   # build from Dockerfile
+docker images                   # list local images
+docker rmi my-app:1.0           # delete image
+
+# Containers
+docker run -d -p 3000:3000 my-app:1.0
+docker ps                        # list running containers
+docker ps -a                     # include stopped
+docker stop &lt;id&gt;
+docker rm &lt;id&gt;
+docker logs -f &lt;id&gt;              # follow logs
+docker exec -it &lt;id&gt; bash       # shell into container</pre>
+      </div>
+      <div class="concept">
+        <h3>Docker Compose</h3>
+        <p>Define and run multi-container applications with a single YAML file.</p>
+        <pre>version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:</pre>
+        <pre>docker compose up -d      # start all services
+docker compose down       # stop all services
+docker compose logs -f    # follow all logs</pre>
+      </div>
+      <div class="concept">
+        <h3>.dockerignore</h3>
+        <p>Like <code>.gitignore</code> — tells Docker which files to exclude from the build context. Always include this.</p>
+        <pre>node_modules
+.git
+.env
+dist
+*.log</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step-card" id="step5">
+    <div class="step-header" onclick="toggle('step5')">
+      <div class="step-num">5</div>
+      <div class="step-title">CI/CD Pipelines</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>What a pipeline does</h3>
+        <p>An automated workflow triggered by a git event (push, PR, tag). It runs a sequence of steps — install, test, build, deploy — and stops if any step fails.</p>
+      </div>
+      <div class="concept">
+        <h3>CI/CD tools — the landscape</h3>
+        <table class="compare-table">
+          <thead><tr><th>Tool</th><th>Where it lives</th><th>Common in</th></tr></thead>
+          <tbody>
+            <tr><td>GitHub Actions</td><td>Inside GitHub</td><td>Open source, startups</td></tr>
+            <tr><td>Azure Pipelines</td><td>Azure DevOps</td><td>Enterprises, Microsoft stack</td></tr>
+            <tr><td>AWS CodePipeline</td><td>AWS</td><td>AWS-native teams</td></tr>
+            <tr><td>GitLab CI</td><td>Inside GitLab</td><td>Self-hosted enterprises</td></tr>
+            <tr><td>Jenkins</td><td>Self-hosted</td><td>Legacy, large orgs</td></tr>
+          </tbody>
+        </table>
+        <p>The concepts — stages, jobs, steps, artifacts, secrets — are the same across all of them. The syntax and integration points differ.</p>
+      </div>
+      <div class="concept">
+        <h3>GitHub Actions</h3>
+        <p>GitHub's built-in CI/CD. Workflows are YAML files in <code>.github/workflows/</code>.</p>
+        <pre># .github/workflows/ci.yml
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+      - run: npm run build</pre>
+        <p>Secrets are stored in repository settings and referenced as <code>${{ secrets.MY_SECRET }}</code>.</p>
+      </div>
+      <div class="concept">
+        <h3>Azure DevOps Pipelines</h3>
+        <p>Microsoft's CI/CD platform — part of the Azure DevOps suite. Pipelines are defined in <code>azure-pipelines.yml</code>. Azure DevOps is a full platform: Repos, Pipelines, Boards, Artifacts, and Test Plans — all integrated.</p>
+        <pre># azure-pipelines.yml
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+  - script: npm ci
+  - script: npm test
+  - script: npm run build</pre>
+      </div>
+      <div class="concept">
+        <h3>Azure Pipelines — key concepts</h3>
+        <ul>
+          <li><strong>Stage</strong>: logical grouping of jobs — e.g. Build → Test → Deploy-Staging → Deploy-Prod</li>
+          <li><strong>Job</strong>: a set of steps that run on the same agent; jobs within a stage can run in parallel</li>
+          <li><strong>Agent</strong>: the machine that runs your pipeline — Microsoft-hosted or self-hosted</li>
+          <li><strong>Service Connection</strong>: secure link to external services (Docker Hub, AWS, Kubernetes, etc.)</li>
+          <li><strong>Variable Group</strong>: shared set of variables/secrets linkable to multiple pipelines</li>
+          <li><strong>Environment</strong>: a named deployment target that can require manual approval</li>
+        </ul>
+        <pre>stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndTest
+        steps:
+          - script: npm ci
+          - script: npm test
+          - task: Docker@2
+            inputs:
+              command: buildAndPush
+              repository: myrepo/my-app
+              tags: $(Build.BuildId)
+
+  - stage: Deploy_Prod
+    dependsOn: Build
+    jobs:
+      - deployment: DeployToProd
+        environment: production   # triggers manual approval gate
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo "Deploying to production"</pre>
+      </div>
+      <div class="concept">
+        <h3>AWS CodePipeline</h3>
+        <p>AWS's native CI/CD orchestration service. Unlike the others, AWS splits the pipeline across three services:</p>
+        <table class="compare-table">
+          <thead><tr><th>Service</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>CodePipeline</td><td>Orchestrates stages — connects source, build, deploy</td></tr>
+            <tr><td>CodeBuild</td><td>Runs build/test steps using buildspec.yml</td></tr>
+            <tr><td>CodeDeploy</td><td>Handles deployment to EC2, ECS, Lambda</td></tr>
+          </tbody>
+        </table>
+        <pre># buildspec.yml
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm ci
+  build:
+    commands:
+      - npm test
+      - npm run build
+      - docker build -t $ECR_REGISTRY/$IMAGE_NAME:$CODEBUILD_BUILD_NUMBER .
+      - docker push $ECR_REGISTRY/$IMAGE_NAME:$CODEBUILD_BUILD_NUMBER</pre>
+        <p>Each stage passes artifacts to the next through an S3 bucket managed by CodePipeline.</p>
+      </div>
+      <div class="concept">
+        <h3>Build and push Docker image — comparison</h3>
+        <p>GitHub Actions:</p>
+        <pre>- uses: docker/login-action@v3
+  with:
+    username: ${{ secrets.DOCKERHUB_USERNAME }}
+    password: ${{ secrets.DOCKERHUB_TOKEN }}
+- uses: docker/build-push-action@v5
+  with:
+    push: true
+    tags: myrepo/my-app:${{ github.sha }}</pre>
+        <p>Azure Pipelines:</p>
+        <pre>- task: Docker@2
+  inputs:
+    containerRegistry: my-docker-service-connection
+    repository: myrepo/my-app
+    command: buildAndPush
+    tags: $(Build.BuildId)</pre>
+        <p>AWS CodeBuild:</p>
+        <pre>aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REGISTRY
+docker build -t $ECR_REGISTRY/my-app:$CODEBUILD_BUILD_NUMBER .
+docker push $ECR_REGISTRY/my-app:$CODEBUILD_BUILD_NUMBER</pre>
+      </div>
+      <div class="concept">
+        <h3>Deployment strategies</h3>
+        <table class="compare-table">
+          <thead><tr><th>Strategy</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td>Recreate</td><td>Stop old, start new — brief downtime</td></tr>
+            <tr><td>Rolling update</td><td>Replace instances one by one — no downtime</td></tr>
+            <tr><td>Blue/Green</td><td>Two identical envs, switch traffic — instant rollback</td></tr>
+            <tr><td>Canary</td><td>Route small % of traffic to new version first</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="concept">
+        <h3>Rollback</h3>
+        <p>If a deploy goes wrong, rollback means switching back to the previous known-good version. With containers and image tags, this is straightforward — point back to the previous image tag and re-run the deploy stage.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step-card" id="step6">
+    <div class="step-header" onclick="toggle('step6')">
+      <div class="step-num">6</div>
+      <div class="step-title">Cloud Fundamentals</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>Regions and Availability Zones</h3>
+        <p>Cloud providers run data centers worldwide. A region is a geographic area (e.g. <code>us-east-1</code>). Within each region are multiple Availability Zones (AZs) — isolated data centers. Running across AZs makes apps resilient to single data center failures.</p>
+      </div>
+      <div class="concept">
+        <h3>Core service categories</h3>
+        <table class="compare-table">
+          <thead><tr><th>Category</th><th>What it is</th><th>AWS example</th></tr></thead>
+          <tbody>
+            <tr><td>Compute</td><td>Virtual servers</td><td>EC2, Lambda</td></tr>
+            <tr><td>Storage</td><td>File/object/block storage</td><td>S3, EBS</td></tr>
+            <tr><td>Database</td><td>Managed DB services</td><td>RDS, DynamoDB</td></tr>
+            <tr><td>Networking</td><td>VPCs, DNS, load balancers</td><td>VPC, Route53, ALB</td></tr>
+            <tr><td>Container</td><td>Run containers</td><td>ECS, EKS</td></tr>
+            <tr><td>IAM</td><td>Access control</td><td>IAM</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="concept">
+        <h3>VPC — Virtual Private Cloud</h3>
+        <p>An isolated virtual network in the cloud. You control the IP ranges, subnets, routing, and security rules. Everything you run in a cloud account lives inside a VPC.</p>
+      </div>
+      <div class="concept">
+        <h3>Subnets</h3>
+        <p>A subdivision of a VPC. Public subnets have routes to the internet. Private subnets do not — they're for databases and internal services that shouldn't be directly exposed.</p>
+      </div>
+      <div class="concept">
+        <h3>Security Groups</h3>
+        <p>Virtual firewalls that control inbound and outbound traffic for your resources. Stateful — if you allow inbound traffic, the response is automatically allowed out.</p>
+        <pre>Allow port 443 from anywhere → web traffic
+Allow port 5432 from app-security-group only → database</pre>
+      </div>
+      <div class="concept">
+        <h3>IAM — Identity and Access Management</h3>
+        <p>Controls who (user, service, application) can do what (action) on which resources. Always follow least privilege — grant only what is needed.</p>
+        <pre>IAM User   → developer with console access
+IAM Role   → assumed by EC2 / Lambda to call other services
+IAM Policy → JSON document defining allowed/denied actions</pre>
+      </div>
+      <div class="concept">
+        <h3>Object Storage (S3)</h3>
+        <p>Store and retrieve any file — images, build artifacts, static websites, logs. Globally accessible, highly durable.</p>
+        <pre>aws s3 cp index.html s3://my-bucket/
+aws s3 sync ./dist s3://my-bucket/</pre>
+      </div>
+      <div class="concept">
+        <h3>Load Balancer</h3>
+        <p>Distributes incoming traffic across multiple instances. If one instance goes down, traffic routes to the healthy ones. Essential for high availability.</p>
+      </div>
+      <div class="concept">
+        <h3>Auto Scaling</h3>
+        <p>Automatically adds or removes instances based on load. Define a minimum, maximum, and desired count. The cloud scales within those bounds based on CPU, memory, or custom metrics.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 7 -->
+  <div class="step-card" id="step7">
+    <div class="step-header" onclick="toggle('step7')">
+      <div class="step-num">7</div>
+      <div class="step-title">Infrastructure as Code</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>Why IaC</h3>
+        <p>Without IaC: you click through a console to create resources. It's not reproducible, not version-controlled, and a different person gets a different result.</p>
+        <p>With IaC: your entire infrastructure is a set of files. You review, version, test, and apply them like application code.</p>
+      </div>
+      <div class="concept">
+        <h3>Terraform</h3>
+        <p>The most widely used IaC tool. Declarative — you describe the desired end state, Terraform figures out how to get there. Works across AWS, GCP, Azure, and hundreds of other providers.</p>
+      </div>
+      <div class="concept">
+        <h3>Core Terraform concepts</h3>
+        <ul>
+          <li><strong>Provider</strong>: the cloud platform you're managing (AWS, GCP, etc.)</li>
+          <li><strong>Resource</strong>: a piece of infrastructure you declare (an S3 bucket, an EC2 instance)</li>
+          <li><strong>State</strong>: Terraform tracks what currently exists so it knows what to create/update/destroy</li>
+          <li><strong>Plan</strong>: preview what changes will be applied before applying them</li>
+        </ul>
+      </div>
+      <div class="concept">
+        <h3>Basic Terraform workflow</h3>
+        <pre>terraform {
+  required_providers {
+    aws = { source = "hashicorp/aws", version = "~> 5.0" }
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "app_bucket" {
+  bucket = "my-app-${var.environment}"
+}
+
+variable "environment" {
+  type    = string
+  default = "staging"
+}
+
+output "bucket_name" {
+  value = aws_s3_bucket.app_bucket.id
+}</pre>
+        <pre>terraform init      # download providers
+terraform plan      # preview changes
+terraform apply     # apply changes
+terraform destroy   # tear down all resources</pre>
+      </div>
+      <div class="concept">
+        <h3>Remote state</h3>
+        <p>By default Terraform stores state locally. In teams, store it remotely so everyone uses the same state.</p>
+        <pre>terraform {
+  backend "s3" {
+    bucket = "my-terraform-state"
+    key    = "prod/terraform.tfstate"
+    region = "us-east-1"
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 8 -->
+  <div class="step-card" id="step8">
+    <div class="step-header" onclick="toggle('step8')">
+      <div class="step-num">8</div>
+      <div class="step-title">Kubernetes</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>What Kubernetes is</h3>
+        <p>Kubernetes (K8s) is a container orchestration platform. It manages running containers across a cluster of machines — handling scheduling, scaling, self-healing, networking, and rolling deployments.</p>
+        <p>You tell Kubernetes what you want running, and it makes it happen and keeps it that way.</p>
+      </div>
+      <div class="concept">
+        <h3>Cluster</h3>
+        <p>A set of machines (nodes). There is a control plane (the brain) and worker nodes (where containers actually run).</p>
+      </div>
+      <div class="concept">
+        <h3>Pod</h3>
+        <p>The smallest deployable unit in Kubernetes. Wraps one or more containers that share network and storage. Pods are ephemeral — they can die and be replaced. You never directly manage pods; higher-level objects manage them for you.</p>
+      </div>
+      <div class="concept">
+        <h3>Deployment</h3>
+        <p>Manages a set of identical pods. You define how many replicas you want, which image to use, and it handles creating, updating, and replacing pods.</p>
+        <pre>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-app
+          image: myrepo/my-app:1.0
+          ports:
+            - containerPort: 3000</pre>
+      </div>
+      <div class="concept">
+        <h3>Service</h3>
+        <p>Pods get new IP addresses every time they restart. A Service gives pods a stable network identity and load balances traffic across them.</p>
+        <pre>apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+spec:
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer</pre>
+        <p>Types: <code>ClusterIP</code> (internal only), <code>NodePort</code> (exposed on node IP), <code>LoadBalancer</code> (cloud load balancer).</p>
+      </div>
+      <div class="concept">
+        <h3>ConfigMap and Secret</h3>
+        <p>ConfigMap: store non-sensitive configuration outside the container image. Secret: store sensitive values — base64 encoded and access-controlled.</p>
+        <pre>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  API_URL: "https://api.example.com"</pre>
+      </div>
+      <div class="concept">
+        <h3>Ingress</h3>
+        <p>Routes external HTTP/S traffic to services inside the cluster based on host/path rules. Like a smart reverse proxy.</p>
+        <pre>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-app-service
+                port:
+                  number: 80</pre>
+      </div>
+      <div class="concept">
+        <h3>Essential kubectl commands</h3>
+        <pre>kubectl apply -f deployment.yml     # create or update
+kubectl get pods
+kubectl describe pod &lt;name&gt;
+kubectl logs -f &lt;pod-name&gt;
+kubectl exec -it &lt;pod-name&gt; -- bash
+
+kubectl scale deployment my-app --replicas=5
+kubectl set image deployment/my-app my-app=myrepo/my-app:2.0
+kubectl rollout undo deployment/my-app
+kubectl rollout history deployment/my-app</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 9 -->
+  <div class="step-card" id="step9">
+    <div class="step-header" onclick="toggle('step9')">
+      <div class="step-num">9</div>
+      <div class="step-title">Monitoring & Observability</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>The 3 pillars of observability</h3>
+        <table class="compare-table">
+          <thead><tr><th>Pillar</th><th>What it is</th><th>Example tools</th></tr></thead>
+          <tbody>
+            <tr><td>Logs</td><td>Text records of events</td><td>ELK Stack, Loki</td></tr>
+            <tr><td>Metrics</td><td>Numbers over time</td><td>Prometheus, CloudWatch</td></tr>
+            <tr><td>Traces</td><td>Request flow across services</td><td>Jaeger, Zipkin</td></tr>
+          </tbody>
+        </table>
+        <p>Logs tell you what happened. Metrics tell you how the system is behaving. Traces tell you where time was spent.</p>
+      </div>
+      <div class="concept">
+        <h3>Prometheus</h3>
+        <p>An open-source metrics collection system. It scrapes metrics from your apps and infrastructure on a schedule and stores them as time-series data. Apps expose a <code>/metrics</code> endpoint. Prometheus pulls from it.</p>
+      </div>
+      <div class="concept">
+        <h3>Grafana</h3>
+        <p>A visualization layer. Connects to Prometheus (and many other sources) and lets you build dashboards with graphs, gauges, and alert panels. Prometheus handles the data. Grafana handles the display.</p>
+      </div>
+      <div class="concept">
+        <h3>Alerting</h3>
+        <p>Rules that fire when a metric crosses a threshold. Alerts are sent to Slack, PagerDuty, email, etc.</p>
+        <pre>- alert: HighErrorRate
+  expr: rate(http_requests_total{status="500"}[5m]) > 0.01
+  for: 5m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Error rate above 1%"</pre>
+      </div>
+      <div class="concept">
+        <h3>Structured logging</h3>
+        <p>Instead of plain text logs, log as JSON. Structured logs are searchable, filterable, and parseable by log aggregation tools.</p>
+        <pre>{
+  "timestamp": "2024-01-15T10:23:00Z",
+  "level": "error",
+  "message": "Payment failed",
+  "userId": "u_123",
+  "requestId": "req_abc",
+  "errorCode": "CARD_DECLINED"
+}</pre>
+      </div>
+      <div class="concept">
+        <h3>Health checks</h3>
+        <p>Endpoints your orchestrator or load balancer pings to know if your app is alive.</p>
+        <ul>
+          <li>Liveness probe: is the app running? (if not, restart it)</li>
+          <li>Readiness probe: is the app ready to serve traffic? (if not, remove from load balancer)</li>
+        </ul>
+        <pre>livenessProbe:
+  httpGet:
+    path: /health
+    port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 30</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 10 -->
+  <div class="step-card" id="step10">
+    <div class="step-header" onclick="toggle('step10')">
+      <div class="step-num">10</div>
+      <div class="step-title">Security — DevSecOps</div>
+      <div class="step-chevron">▼</div>
+    </div>
+    <div class="step-body">
+      <div class="concept">
+        <h3>Shift left on security</h3>
+        <p>Security checks happen at every step of the pipeline — not as an afterthought before release. Developers are responsible for secure code, not just a separate security team.</p>
+      </div>
+      <div class="concept">
+        <h3>Secrets management</h3>
+        <p>Never store secrets in code or Docker images.</p>
+        <ul>
+          <li>Environment variables injected at runtime</li>
+          <li>Cloud secret stores: AWS Secrets Manager, HashiCorp Vault, Azure Key Vault</li>
+          <li>Kubernetes Secrets (with RBAC + encryption at rest)</li>
+        </ul>
+      </div>
+      <div class="concept">
+        <h3>Dependency scanning</h3>
+        <p>Your app's dependencies can have known vulnerabilities. Scan them automatically.</p>
+        <pre>npm audit        # check for vulnerable packages
+npm audit fix    # auto-fix where possible</pre>
+        <p>Tools: Snyk, Dependabot, OWASP Dependency-Check.</p>
+      </div>
+      <div class="concept">
+        <h3>Container image scanning</h3>
+        <p>Scan Docker images for known CVEs in base images and installed packages. Run in CI on every build.</p>
+        <pre>trivy image my-app:1.0</pre>
+      </div>
+      <div class="concept">
+        <h3>SAST — Static Application Security Testing</h3>
+        <p>Analyze source code for security issues without running it. Tools: SonarQube, Semgrep, CodeQL (built into GitHub).</p>
+      </div>
+      <div class="concept">
+        <h3>Least privilege</h3>
+        <p>Every service, user, or role should have only the permissions it needs — nothing more. If your app only reads from S3, its IAM role should only allow <code>s3:GetObject</code>, not <code>s3:*</code>.</p>
+      </div>
+      <div class="concept">
+        <h3>HTTPS everywhere</h3>
+        <p>Never serve traffic over HTTP in production. Use TLS certificates.</p>
+        <ul>
+          <li>Let's Encrypt: free, automated cert issuance</li>
+          <li>cert-manager: automates cert management in Kubernetes</li>
+          <li>AWS ACM / Azure App Service Certificates: managed certs for cloud services</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-label">Glossary</h2>
+  <div class="glossary-grid">
+    <div class="glossary-item"><div class="glossary-term">DevOps</div><div class="glossary-def">Practice combining development and operations to automate and accelerate software delivery</div></div>
+    <div class="glossary-item"><div class="glossary-term">CI</div><div class="glossary-def">Continuous Integration — automatically build and test code on every push</div></div>
+    <div class="glossary-item"><div class="glossary-term">CD</div><div class="glossary-def">Continuous Delivery/Deployment — automatically prepare or deploy every passing build</div></div>
+    <div class="glossary-item"><div class="glossary-term">Pipeline</div><div class="glossary-def">Automated sequence of steps code goes through from commit to deployment</div></div>
+    <div class="glossary-item"><div class="glossary-term">IaC</div><div class="glossary-def">Infrastructure as Code — defining infrastructure in version-controlled files</div></div>
+    <div class="glossary-item"><div class="glossary-term">Shift Left</div><div class="glossary-def">Moving testing and security checks earlier in the development process</div></div>
+    <div class="glossary-item"><div class="glossary-term">Container</div><div class="glossary-def">A lightweight, isolated package containing an app and all its dependencies</div></div>
+    <div class="glossary-item"><div class="glossary-term">Image</div><div class="glossary-def">Read-only blueprint for a container — built from a Dockerfile, stored in a registry</div></div>
+    <div class="glossary-item"><div class="glossary-term">Dockerfile</div><div class="glossary-def">Instructions for building a Docker image layer by layer</div></div>
+    <div class="glossary-item"><div class="glossary-term">Docker Compose</div><div class="glossary-def">Tool for defining and running multi-container apps with a YAML file</div></div>
+    <div class="glossary-item"><div class="glossary-term">Registry</div><div class="glossary-def">Storage for Docker images — Docker Hub, ECR, GHCR, ACR</div></div>
+    <div class="glossary-item"><div class="glossary-term">Volume</div><div class="glossary-def">Persistent storage that survives container restarts</div></div>
+    <div class="glossary-item"><div class="glossary-term">Azure DevOps</div><div class="glossary-def">Microsoft's full DevOps platform — Repos, Pipelines, Boards, Artifacts, Test Plans</div></div>
+    <div class="glossary-item"><div class="glossary-term">Azure Pipelines</div><div class="glossary-def">The CI/CD component of Azure DevOps — pipelines defined in azure-pipelines.yml</div></div>
+    <div class="glossary-item"><div class="glossary-term">Service Connection</div><div class="glossary-def">Secure link in Azure DevOps connecting a pipeline to an external service</div></div>
+    <div class="glossary-item"><div class="glossary-term">Variable Group</div><div class="glossary-def">Shared set of variables/secrets in Azure DevOps linkable to multiple pipelines</div></div>
+    <div class="glossary-item"><div class="glossary-term">AWS CodePipeline</div><div class="glossary-def">AWS's pipeline orchestration service — connects source, build, and deploy stages</div></div>
+    <div class="glossary-item"><div class="glossary-term">AWS CodeBuild</div><div class="glossary-def">AWS's managed build service — runs steps defined in buildspec.yml</div></div>
+    <div class="glossary-item"><div class="glossary-term">AWS CodeDeploy</div><div class="glossary-def">AWS's deployment service — handles rollouts to EC2, ECS, Lambda</div></div>
+    <div class="glossary-item"><div class="glossary-term">ECR</div><div class="glossary-def">Elastic Container Registry — AWS's private Docker image registry</div></div>
+    <div class="glossary-item"><div class="glossary-term">Kubernetes</div><div class="glossary-def">Container orchestration platform — manages running containers at scale</div></div>
+    <div class="glossary-item"><div class="glossary-term">Pod</div><div class="glossary-def">Smallest unit in Kubernetes — wraps one or more containers</div></div>
+    <div class="glossary-item"><div class="glossary-term">Deployment</div><div class="glossary-def">Kubernetes object that manages a set of replicated pods</div></div>
+    <div class="glossary-item"><div class="glossary-term">Service</div><div class="glossary-def">Gives pods a stable network identity and load balances traffic</div></div>
+    <div class="glossary-item"><div class="glossary-term">Ingress</div><div class="glossary-def">Routes external HTTP traffic to internal Kubernetes services</div></div>
+    <div class="glossary-item"><div class="glossary-term">Namespace</div><div class="glossary-def">Logical grouping of Kubernetes resources — used to isolate environments or teams</div></div>
+    <div class="glossary-item"><div class="glossary-term">Terraform</div><div class="glossary-def">IaC tool for defining cloud infrastructure declaratively across any provider</div></div>
+    <div class="glossary-item"><div class="glossary-term">VPC</div><div class="glossary-def">Virtual Private Cloud — isolated network in the cloud</div></div>
+    <div class="glossary-item"><div class="glossary-term">IAM</div><div class="glossary-def">Identity and Access Management — controls who can do what on which resources</div></div>
+    <div class="glossary-item"><div class="glossary-term">Least Privilege</div><div class="glossary-def">Only granting the minimum permissions required for a role or service</div></div>
+    <div class="glossary-item"><div class="glossary-term">Prometheus</div><div class="glossary-def">Open-source metrics collection and alerting system</div></div>
+    <div class="glossary-item"><div class="glossary-term">Grafana</div><div class="glossary-def">Visualization tool for metrics dashboards and alerts</div></div>
+    <div class="glossary-item"><div class="glossary-term">Observability</div><div class="glossary-def">The ability to understand what a system is doing from its outputs — logs, metrics, traces</div></div>
+    <div class="glossary-item"><div class="glossary-term">SAST</div><div class="glossary-def">Static Application Security Testing — analyzing code for security issues without running it</div></div>
+    <div class="glossary-item"><div class="glossary-term">CVE</div><div class="glossary-def">Common Vulnerabilities and Exposures — publicly known security vulnerability</div></div>
+  </div>
+
+</div>
+
+<script>
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeBtn').innerHTML = isDark ? '🌙 <span>Dark mode</span>' : '☀️ <span>Light mode</span>';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').innerHTML = '☀️ <span>Light mode</span>';
+  }
+</script>
+
+</body>
+</html>
