@@ -448,11 +448,16 @@ chore: upgrade dependencies</pre>
       </div>
       <div class="concept">
         <h3>Image</h3>
-        <p>A read-only blueprint for a container — like a class in code. Contains the filesystem snapshot: OS layer, runtime, app code, config. Built from a <code>Dockerfile</code> and stored in a registry.</p>
+        <p>Think of an image like a <strong>recipe</strong>. It contains everything needed to run your app — the OS layer, the runtime (Node, Python, etc.), your app code, and any config. It's read-only and doesn't actually run anything on its own.</p>
+        <p>You build an image once from a <code>Dockerfile</code>, then store it in a registry (like Docker Hub) so anyone or any server can download and run it.</p>
+        <p>The key benefit: the image is the same everywhere. The exact same image runs on your laptop, your teammate's laptop, and the production server. No environment differences.</p>
       </div>
       <div class="concept">
         <h3>Container</h3>
-        <p>A running instance of an image — like an object from a class. You can run many containers from the same image simultaneously.</p>
+        <p>A container is what you get when you actually <strong>run</strong> an image. If the image is a recipe, the container is the cooked meal.</p>
+        <p>It's an isolated, running process on your machine. It has its own filesystem (from the image), its own network, and its own process space — completely isolated from other containers and from your host machine.</p>
+        <p>You can run many containers from the same image at the same time. For example, run 5 containers from your <code>my-app:1.0</code> image to handle more traffic — they all start from the same recipe but run independently.</p>
+        <p>When a container stops, anything written inside it is gone. That's why volumes exist (covered below).</p>
       </div>
       <div class="concept">
         <h3>Dockerfile</h3>
