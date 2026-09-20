@@ -447,21 +447,21 @@ chore: upgrade dependencies</pre>
         <p>Containers share the host OS kernel. VMs each have their own OS. Containers are lighter and faster.</p>
       </div>
       <div class="concept">
-        <h3>Image</h3>
-        <p>Think of an image like a <strong>recipe</strong>. It contains everything needed to run your app — the OS layer, the runtime (Node, Python, etc.), your app code, and any config. It's read-only and doesn't actually run anything on its own.</p>
-        <p>You build an image once from a <code>Dockerfile</code>, then store it in a registry (like Docker Hub) so anyone or any server can download and run it.</p>
-        <p>The key benefit: the image is the same everywhere. The exact same image runs on your laptop, your teammate's laptop, and the production server. No environment differences.</p>
-      </div>
-      <div class="concept">
-        <h3>Container</h3>
-        <p>A container is what you get when you actually <strong>run</strong> an image. If the image is a recipe, the container is the cooked meal.</p>
-        <p>It's an isolated, running process on your machine. It has its own filesystem (from the image), its own network, and its own process space — completely isolated from other containers and from your host machine.</p>
-        <p>You can run many containers from the same image at the same time. For example, run 5 containers from your <code>my-app:1.0</code> image to handle more traffic — they all start from the same recipe but run independently.</p>
-        <p>When a container stops, anything written inside it is gone. That's why volumes exist (covered below).</p>
+        <h3>Dockerfile vs Image vs Container</h3>
+        <p>The easiest way to understand all three together:</p>
+        <ul>
+          <li><strong>Dockerfile</strong> = the recipe (a text file with instructions: "use this base, install these packages, copy this code")</li>
+          <li><strong>Image</strong> = the baked cake (the actual result after running those instructions — a single packaged file ready to ship)</li>
+          <li><strong>Container</strong> = eating the cake (the image actually running as a live process)</li>
+        </ul>
+        <pre>Dockerfile  →  docker build  →  Image  →  docker run  →  Container
+(instructions)                 (built artifact)          (running process)</pre>
+        <p>You write the Dockerfile once. Run <code>docker build</code> and it executes those instructions top to bottom and produces an image. That image is what you push to Docker Hub, pull on a server, and run.</p>
+        <p>The Dockerfile lives in your codebase (it's just a text file). The image is the output — like how source code compiles into a binary. You ship the image, not the Dockerfile.</p>
       </div>
       <div class="concept">
         <h3>Dockerfile</h3>
-        <p>A text file with instructions to build an image. Each instruction creates a layer.</p>
+        <p>A text file with step-by-step instructions to build an image. Each instruction creates a layer.</p>
         <pre>FROM node:20-alpine          # base image
 WORKDIR /app                 # set working directory
 COPY package*.json ./        # copy dependency files

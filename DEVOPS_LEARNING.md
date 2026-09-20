@@ -7,28 +7,22 @@
 
 ## The Big Picture
 
-DevOps is about closing the gap between writing code and running it reliably in production. Instead of teams throwing code over a wall, everything — building, testing, deploying, monitoring — is automated and shared.
+DevOps is about one thing: getting code from your laptop to users — fast, safely, and automatically.
+
+Without DevOps: you write code → manually test → zip & send to ops team → ops deploys (maybe days later) → something breaks → nobody knows why → slow fix cycle.
+
+With DevOps: you push code → tests run automatically → app is packaged automatically → deployed automatically → monitored automatically → alerts if something breaks → fix fast, repeat.
 
 ```
-Code
-  ↓ Version Control (Git)
-  ↓ CI Pipeline → Build + Test
-  ↓ CD Pipeline → Package + Deploy
-  ↓ Infrastructure (Cloud / Containers)
-  ↓ Monitoring
-  ↓ Feedback → back to Code
-```
-
-The full stack eventually looks like:
-
-```
-App Code
-  ↓ GitHub / GitLab
-  ↓ CI/CD (GitHub Actions / Jenkins)
-  ↓ Docker → Container Image
-  ↓ Kubernetes → Orchestration
-  ↓ Cloud (AWS / GCP / Azure)
-  ↓ Prometheus + Grafana → Monitoring
+Without DevOps                  With DevOps
+--------------                  -----------
+Write code                      Write code → push to Git
+  ↓ manually test                 ↓ tests run automatically
+  ↓ zip & send to ops             ↓ app is packaged automatically
+  ↓ ops deploys (days later)      ↓ deployed automatically
+  ↓ something breaks              ↓ monitored automatically
+  ↓ nobody knows why              ↓ alerts if something breaks
+  ↓ slow fix cycle                ↓ fix fast, repeat
 ```
 
 ---
@@ -302,23 +296,28 @@ Containers share the host OS kernel. VMs each have their own OS. Containers are 
 
 ---
 
-**Image**
+**Dockerfile vs Image vs Container**
 
-An image is a read-only blueprint for a container. Like a class in code. It contains the filesystem snapshot: OS layer, runtime, app code, config.
+The easiest way to understand all three together:
 
-Images are built from a `Dockerfile` and stored in a registry (Docker Hub, ECR, GCR).
+- **Dockerfile** = the recipe (a text file with instructions: "use this base, install these packages, copy this code")
+- **Image** = the baked cake (the actual result after running those instructions — a single packaged file ready to ship)
+- **Container** = eating the cake (the image actually running as a live process)
 
----
+```
+Dockerfile  →  docker build  →  Image  →  docker run  →  Container
+(instructions)                 (built artifact)          (running process)
+```
 
-**Container**
+You write the Dockerfile once. Run `docker build` and it executes those instructions top to bottom and produces an image. That image is what you push to Docker Hub, pull on a server, and run.
 
-A running instance of an image. Like an object instantiated from a class. You can run many containers from the same image simultaneously.
+The Dockerfile lives in your codebase (it's just a text file). The image is the output — like how source code compiles into a binary. You ship the image, not the Dockerfile.
 
 ---
 
 **Dockerfile**
 
-A text file with instructions to build an image. Each instruction creates a layer.
+A text file with step-by-step instructions to build an image. Each instruction creates a layer.
 
 ```dockerfile
 FROM node:20-alpine          # base image
