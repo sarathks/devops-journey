@@ -222,34 +222,33 @@
 
   <div class="big-picture">
     <h2>The Big Picture</h2>
-    <div class="flow-grid">
+    <p style="color: var(--text-soft); margin-bottom: 1.2rem; font-size: 0.95rem;">
+      DevOps is about one thing: <strong style="color: var(--text);">getting code from your laptop to users — fast, safely, and automatically.</strong>
+      <br><br>
+      Without DevOps: you write code → manually zip it up → someone else deploys it → something breaks → nobody knows why → days pass.
+      <br><br>
+      With DevOps: you push code → everything happens automatically → tests run, app gets packaged, deployed, and monitored — all without manual steps.
+    </p>
+    <div class="flow-grid" style="grid-template-columns: 1fr 1fr;">
       <div class="flow-box">
-        <h3>The loop</h3>
-        <pre>Code
-  ↓ Git
-  ↓ CI Pipeline
-  ↓ CD Pipeline
-  ↓ Infrastructure
-  ↓ Monitoring
-  ↓ Feedback</pre>
+        <h3>Without DevOps</h3>
+        <pre>Write code
+  ↓ manually test
+  ↓ zip & send to ops team
+  ↓ ops deploys (maybe days later)
+  ↓ something breaks
+  ↓ nobody knows why
+  ↓ slow fix cycle</pre>
       </div>
       <div class="flow-box">
-        <h3>Full stack</h3>
-        <pre>App Code
-  ↓ GitHub / GitLab
-  ↓ CI/CD Pipeline
-  ↓ Docker Image
-  ↓ Kubernetes
-  ↓ Cloud (AWS/Azure)
-  ↓ Prometheus + Grafana</pre>
-      </div>
-      <div class="flow-box">
-        <h3>Key principles</h3>
-        <pre>Automate everything
-Fast feedback loops
-Infrastructure as Code
-Shift left on quality
-Monitor & iterate</pre>
+        <h3>With DevOps</h3>
+        <pre>Write code → push to Git
+  ↓ tests run automatically
+  ↓ app is packaged automatically
+  ↓ deployed automatically
+  ↓ monitored automatically
+  ↓ alerts if something breaks
+  ↓ fix fast, repeat</pre>
       </div>
     </div>
   </div>
